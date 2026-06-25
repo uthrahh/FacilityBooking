@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Book Lab</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <div id="equipment-container"></div>
+
+    <button
+        class="btn btn-primary">
+
+        Submit Booking
+
+    </button>
+
+</form>
+<script src="/static/js/lab_booking.js"></script>
+<script src="/static/js/lab_availability.js"></script>
+<script>
+
+document
+.getElementById(
+    "id_lab"
+)
+.addEventListener(
+    "change",
+    loadEquipment
+);
+
+document
+.getElementById(
+    "id_booking_date"
+)
+.addEventListener(
+    "change",
+    loadEquipment
+);
+
+function loadEquipment()
+{
+
+    let lab =
+        document.getElementById(
+            "id_lab"
+        ).value;
+
+    let date =
+        document.getElementById(
+            "id_booking_date"
+        ).value;
+
+    if(!lab || !date)
+    {
+        return;
+    }
+
+    fetch(
+        `/equipment/${lab}/?date=${date}`
+    )
+    .then(
+        response =>
+            response.json()
+    )
+    .then(
+        data =>
+        {
+
+            let container =
+                document.getElementById(
+                    "equipment-container"
+                );
+
+            container.innerHTML = "";
+
+            data.forEach(
+                eq =>
+                {
+
+                    let occupiedText = "";
+
+                    eq.occupied.forEach(
+                        slot =>
+                        {
+                            occupiedText +=
+                                `<li>
+                                    ${slot.from}
+                                    -
+                                    ${slot.to}
+                                </li>`;
+                        }
+                    );
+
+                    container.innerHTML +=
+                    `
+                    <div class="card mb-3">
+
+                        <div class="card-body">
+
+                            <h6>
+                                ${eq.name}
+                            </h6>
+
+                            <small>
+                                Occupied Slots
+                            </small>
+
+                            <ul>
+                                ${occupiedText}
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                }
+            );
+
+        }
+    );
+
+}
+
+</script>
+{% endblock %}

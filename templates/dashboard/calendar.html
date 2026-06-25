@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Calendar</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+        rel="stylesheet"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+</head>
+
+<body>
+
+    <h2>Facility Calendar</h2>
+
+    <div id="calendar"></div>
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function()
+            {
+
+                let calendarEl =
+                    document.getElementById(
+                        "calendar"
+                    );
+
+                let calendar =
+                    new FullCalendar.Calendar(
+                        calendarEl,
+                        {
+
+                            initialView:
+                                "dayGridMonth",
+
+                            height:
+                                "auto",
+
+                            headerToolbar:
+                            {
+                                left:
+                                    "prev,next today",
+
+                                center:
+                                    "title",
+
+                                right:
+                                    "dayGridMonth,timeGridWeek,timeGridDay"
+                            },
+
+                            events:
+                                "/calendar/events/",
+
+                            eventClick:
+                                function(info)
+                                {
+
+                                    let bookingId =
+                                        info.event.extendedProps.booking_id;
+
+                                    let row =
+                                        document.getElementById(
+                                            "booking-" +
+                                            bookingId
+                                        );
+
+                                    if(row)
+                                    {
+                                        row.scrollIntoView(
+                                            {
+                                                behavior:"smooth"
+                                            }
+                                        );
+                                    }
+
+                                }
+
+                        }
+                    );
+
+                calendar.render();
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>
+Admin Dashboard
+</h2>
+
+<div class="row">
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Startups
+</h5>
+
+<h2>
+{{ startup_count }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Labs
+</h5>
+
+<h2>
+{{ lab_count }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Equipment
+</h5>
+
+<h2>
+{{ equipment_count }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Halls
+</h5>
+
+<h2>
+{{ hall_count }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Pending Lab
+</h5>
+
+<h2>
+{{ pending_lab }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-2">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5>
+Pending Hall
+</h5>
+
+<h2>
+{{ pending_hall }}
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-4">
+
+<a
+href="/admin/startups/startup/"
+class="btn btn-primary">
+
+Manage Startups
+
+</a>
+
+<a
+href="/admin/labs/lab/"
+class="btn btn-success">
+
+Manage Labs
+
+</a>
+
+<a
+href="/admin/labs/equipment/"
+class="btn btn-warning">
+
+Manage Equipment
+
+</a>
+
+<a
+href="/admin/halls/hall/"
+class="btn btn-info">
+
+Manage Halls
+
+</a>
+
+<a
+href="/admin/bookings/labbooking/"
+class="btn btn-danger">
+
+Approve Lab Bookings
+
+</a>
+
+<a
+href="/admin/bookings/hallbooking/"
+class="btn btn-dark">
+
+Approve Hall Bookings
+
+</a>
+
+</div>
+
+{% endblock %}

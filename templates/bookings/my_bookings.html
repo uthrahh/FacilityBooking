@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    My Bookings
+</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card mb-5">
+
+    <div class="card-header">
+        <h4>Lab Bookings</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Lab</th>
+                    <th>Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Estimated Fee</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for booking in lab_bookings %}
+
+                <tr>
+
+                    <td>
+                        {{ booking.id }}
+                    </td>
+
+                    <td>
+                        {{ booking.booking_date }}
+                    </td>
+
+                    <td>
+                        {{ booking.lab }}
+                    </td>
+
+                    <td>
+
+                        {% if booking.is_full_lab %}
+                            Full Lab
+                        {% else %}
+                            Equipment
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ booking.from_time }}
+                    </td>
+
+                    <td>
+                        {{ booking.to_time }}
+                    </td>
+
+                    <td>
+                        ₹{{ booking.estimated_fee }}
+                    </td>
+
+                    <td>
+                        {{ booking.get_status_display }}
+                    </td>
+
+                    <td>
+                        <a
+                        href="{% url 'edit_lab_booking' booking.id %}"
+                        class="btn btn-warning btn-sm">
+
+                        Edit
+
+                        </a>
+                        {% if booking.status != "CANCELLED" %}
+
+                            <a
+                                href="{% url 'cancel_lab_booking' booking.id %}"
+                                class="btn btn-danger btn-sm">
+
+                                Cancel
+
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="9" class="text-center">
+
+                        No Lab Bookings Found
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="card-header">
+        <h4>Hall Bookings</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Hall</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>AC</th>
+                    <th>Projector</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for booking in hall_bookings %}
+
+                <tr>
+
+                    <td>
+                        {{ booking.id }}
+                    </td>
+
+                    <td>
+                        {{ booking.booking_date }}
+                    </td>
+
+                    <td>
+                        {{ booking.hall }}
+                    </td>
+
+                    <td>
+                        {{ booking.from_time }}
+                    </td>
+
+                    <td>
+                        {{ booking.to_time }}
+                    </td>
+
+                    <td>
+
+                        {% if booking.ac %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if booking.projector %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ booking.seats }}
+                    </td>
+
+                    <td>
+                        {{ booking.get_status_display }}
+                    </td>
+
+                    <td>
+                        <a
+                        href="{% url 'edit_hall_booking' booking.id %}"
+                        class="btn btn-warning btn-sm">
+
+                        Edit
+
+                        </a>
+                        {% if booking.status != "CANCELLED" %}
+
+                            <a
+                                href="{% url 'cancel_hall_booking' booking.id %}"
+                                class="btn btn-danger btn-sm">
+
+                                Cancel
+
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="10" class="text-center">
+
+                        No Hall Bookings Found
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="mt-4">
+
+    <a
+        href="{% url 'lab_booking' %}"
+        class="btn btn-primary">
+
+        Book Lab
+
+    </a>
+
+    <a
+        href="{% url 'hall_booking' %}"
+        class="btn btn-success">
+
+        Book Hall
+
+    </a>
+
+</div>
+
+{% endblock %}

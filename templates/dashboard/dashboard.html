@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>
+Welcome {{ startup.name }}
+</h2>
+
+<div class="row mt-4">
+
+    <div class="col-md-3">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5>
+                    Lab Bookings
+                </h5>
+
+                <h2>
+                    {{ lab_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5>
+                    Hall Bookings
+                </h5>
+
+                <h2>
+                    {{ hall_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5>
+                    Pending
+                </h5>
+
+                <h2>
+                    {{ pending_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5>
+                    Approved
+                </h5>
+
+                <h2>
+                    {{ approved_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="mt-4">
+
+    <a
+        href="{% url 'lab_booking' %}"
+        class="btn btn-primary">
+
+        Book Lab
+
+    </a>
+
+    <a
+        href="{% url 'hall_booking' %}"
+        class="btn btn-success">
+
+        Book Hall
+
+    </a>
+
+    <a
+        href="{% url 'my_bookings' %}"
+        class="btn btn-secondary">
+
+        My Bookings
+
+    </a>
+    <a
+    href="/calendar/"
+    class="btn btn-info">
+
+    Calendar
+
+    </a>
+</div>
+
+{% endblock %}
