@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Startups
+            </h2>
+
+            <small class="text-muted">
+                Manage registered startups
+            </small>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'startup_add' %}"
+                class="btn btn-primary"
+            >
+                + Add Startup
+            </a>
+
+        </div>
+
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="card shadow">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Startup ID</th>
+
+                        <th>Name</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for startup in startups %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ startup.startup_id }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ startup.name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ startup.email }}
+
+                        </td>
+
+                        <td>
+
+                            {{ startup.phone }}
+
+                        </td>
+
+                        <td>
+
+                            {% if startup.is_active %}
+
+                                <span class="badge bg-success">
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center"
+                        >
+
+                            No Startups Available
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

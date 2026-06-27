@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                Hall Bookings
+
+            </h2>
+
+            <small class="text-muted">
+
+                Review and manage hall bookings
+
+            </small>
+
+        </div>
+
+        <a
+            href="{% url 'calendar' %}"
+            class="btn btn-outline-primary"
+        >
+            Calendar View
+        </a>
+
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="card shadow">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Booked On</th>
+
+                        <th>Startup</th>
+
+                        <th>Date</th>
+
+                        <th>Time</th>
+
+                        <th>Hall</th>
+
+                        <th>Utilities</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for booking in bookings %}
+
+                    <tr id="booking-{{ booking.id }}">
+
+                        <td>
+
+                            {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
+
+                        </td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ booking.startup.startup_id }}
+
+                            </strong>
+
+                            <br>
+
+                            {{ booking.startup.name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.booking_date|date:"d/m/Y" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.from_time }}
+
+                            -
+
+                            {{ booking.to_time }}
+
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="badge"
+                                style="
+                                    background:#FDEBD0;
+                                    color:#000;
+                                "
+                            >
+
+                                {{ booking.hall.hall_id }}
+
+                            </span>
+
+                            <br>
+
+                            {{ booking.hall.name }}
+
+                        </td>
+
+                        <td>
+
+                            <table class="table table-sm table-borderless mb-0">
+
+                                <tr>
+
+                                    <td width="120">
+
+                                        AC
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if booking.ac %}
+
+                                            ✔
+
+                                        {% else %}
+
+                                            -
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>
+
+                                        Projector
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if booking.projector %}
+
+                                            ✔
+
+                                        {% else %}
+
+                                            -
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>
+
+                                        Seats
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ booking.seats }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>
+
+                                        Mic
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if booking.mic_qty %}
+
+                                            {{ booking.mic_qty }}
+
+                                        {% else %}
+
+                                            -
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>
+
+                                        Water
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if booking.water_bottle_qty %}
+
+                                            {{ booking.water_bottle_qty }}
+
+                                        {% else %}
+
+                                            -
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </td>
+
+                        <td>
+
+                            <form
+                                method="post"
+                                action="{% url 'update_hall_booking_status' booking.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <select
+                                    name="status"
+                                    class="form-select form-select-sm"
+                                    onchange="this.form.submit()"
+                                >
+
+                                    <option
+                                        value="NEW"
+                                        {% if booking.status == "NEW" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        New Booking
+                                    </option>
+
+                                    <option
+                                        value="APPROVED"
+                                        {% if booking.status == "APPROVED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Approved
+                                    </option>
+
+                                    <option
+                                        value="REJECTED"
+                                        {% if booking.status == "REJECTED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Rejected
+                                    </option>
+
+                                    <option
+                                        value="CANCELLED"
+                                        {% if booking.status == "CANCELLED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Cancelled
+                                    </option>
+
+                                </select>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center"
+                        >
+
+                            No Hall Bookings Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

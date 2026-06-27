@@ -2,40 +2,156 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
 
-<div class="col-md-4">
+    <div class="col-lg-5 col-md-7">
 
-<h2>
-Startup Login
-</h2>
+        <div class="card shadow border-0">
 
-<form method="post">
+            <div class="card-header bg-primary text-white text-center">
 
-    {% csrf_token %}
+                <h3 class="mb-0">
+                    Startup Login
+                </h3>
 
-    {{ form.as_p }}
+            </div>
 
-    <button
-        class="btn btn-primary">
+            <div class="card-body p-4">
 
-        Login
+                {% if error %}
 
-    </button>
+                    <div class="alert alert-danger">
 
-</form>
+                        {{ error }}
 
-{% if error %}
+                    </div>
 
-<div class="alert alert-danger mt-3">
+                {% endif %}
 
-    {{ error }}
+                {% if messages %}
 
-</div>
+                    {% for message in messages %}
 
-{% endif %}
+                        <div class="alert alert-success">
 
-</div>
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Startup ID
+
+                        </label>
+
+                        {{ form.startup_id }}
+
+                        <small class="text-muted">
+
+                            Exactly 4 digits
+
+                        </small>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Password
+
+                        </label>
+
+                        {{ form.password }}
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+
+                        Login
+
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <div class="text-center">
+
+                    <p class="mb-2">
+
+                        Don't have an account?
+
+                    </p>
+
+                    <a
+                        href="{% url 'startup_signup' %}"
+                        class="btn btn-outline-primary w-100"
+                    >
+
+                        Create Startup Account
+
+                    </a>
+
+                </div>
+
+                <hr>
+
+                <div class="text-center">
+
+                    <a
+                        href="{% url 'admin_login' %}"
+                        class="btn btn-dark w-100"
+                    >
+
+                        Admin Login
+
+                    </a>
+
+                </div>
+
+                <hr>
+
+                <div class="alert alert-light border mb-0">
+
+                    <strong>
+                        Demo Account
+                    </strong>
+
+                    <br>
+
+                    Startup ID :
+                    <strong>
+                        1503
+                    </strong>
+
+                    <br>
+
+                    Password :
+                    <strong>
+                        Startup123
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

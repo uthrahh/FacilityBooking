@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow mt-4">
+
+                <div class="card-header bg-success text-white">
+
+                    <h3 class="mb-0">
+
+                        Import CSV
+
+                    </h3>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="alert alert-success">
+
+                                {{ message }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    {% if form.errors %}
+
+                        <div class="alert alert-danger">
+
+                            {{ form.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+
+                                CSV File
+
+                            </label>
+
+                            {{ form.csv_file }}
+
+                        </div>
+
+                        <div class="alert alert-info">
+
+                            <h6 class="mb-2">
+
+                                CSV Format
+
+                            </h6>
+
+                            {% if csv_type == "labs" %}
+
+<pre class="mb-0">
+lab_id,name
+L01,AI Lab
+L02,IoT Lab
+</pre>
+
+                            {% elif csv_type == "equipment" %}
+
+<pre class="mb-0">
+equipment_id,name,lab_id,fee_per_hour
+L01E01,3D Printer,L01,250
+L01E02,Oscilloscope,L01,150
+</pre>
+
+                            {% elif csv_type == "halls" %}
+
+<pre class="mb-0">
+hall_id,name,capacity
+H01,Seminar Hall,120
+H02,Conference Hall,60
+</pre>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <a
+                                href="javascript:history.back()"
+                                class="btn btn-secondary"
+                            >
+
+                                Back
+
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                            >
+
+                                Import CSV
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

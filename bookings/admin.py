@@ -4,10 +4,7 @@ from .models import (
     LabBooking,
     HallBooking,
     LabBookingEquipment,
-    BookingHistory
-)
-from notifications.services import (
-    create_notification
+    BookingHistory,
 )
 
 
@@ -19,46 +16,13 @@ class LabBookingAdmin(admin.ModelAdmin):
         "startup",
         "lab",
         "booking_date",
-        "status"
+        "status",
     )
 
     search_fields = (
         "startup__name",
-        "lab__name"
+        "lab__name",
     )
-
-    def save_model(
-        self,
-        request,
-        obj,
-        form,
-        change
-    ):
-
-        if change:
-
-            old = (
-                LabBooking.objects.get(
-                    id=obj.id
-                )
-            )
-
-            if (
-                old.status
-                !=
-                obj.status
-            ):
-
-                create_notification(
-                    startup=obj.startup,
-                    title="Lab Booking Updated",
-                    message=(
-                        f"Booking "
-                        f"{obj.id} "
-                        f"is now "
-                        f"{obj.status}"
-                    )
-                )
 
 
 @admin.register(HallBooking)
@@ -69,58 +33,15 @@ class HallBookingAdmin(admin.ModelAdmin):
         "startup",
         "hall",
         "booking_date",
-        "status"
+        "status",
     )
 
     search_fields = (
         "startup__name",
-        "hall__name"
+        "hall__name",
     )
 
-    def save_model(
-        self,
-        request,
-        obj,
-        form,
-        change
-    ):
 
-        if change:
+admin.site.register(LabBookingEquipment)
 
-            old = (
-                HallBooking.objects.get(
-                    id=obj.id
-                )
-            )
-
-            if (
-                old.status
-                !=
-                obj.status
-            ):
-
-                create_notification(
-                    "Hall Booking Updated",
-                    (
-                        f"Booking "
-                        f"{obj.id} "
-                        f"is now "
-                        f"{obj.status}"
-                    )
-                )
-
-        super().save_model(
-            request,
-            obj,
-            form,
-            change
-        )
-
-
-admin.site.register(
-    LabBookingEquipment
-)
-
-admin.site.register(
-    BookingHistory
-)
+admin.site.register(BookingHistory)

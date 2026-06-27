@@ -1,29 +1,50 @@
 from django.db import models
 
+from django.core.validators import (
+    RegexValidator,
+    EmailValidator,
+)
+
+
+startup_id_validator = RegexValidator(
+    regex=r"^\d{4}$",
+    message="Startup ID must contain exactly 4 digits."
+)
+
+
+phone_validator = RegexValidator(
+    regex=r"^[0-9]{10}$",
+    message="Phone number must contain exactly 10 digits."
+)
+
 
 class Startup(models.Model):
 
     startup_id = models.CharField(
         max_length=4,
-        unique=True
+        unique=True,
+        validators=[
+            startup_id_validator
+        ]
     )
 
     name = models.CharField(
-        max_length=255
+        max_length=200
     )
 
-    founder_name = models.CharField(
-        max_length=255
+    email = models.EmailField(
+        unique=True,
+        validators=[
+            EmailValidator()
+        ]
     )
-
-    email = models.EmailField()
 
     phone = models.CharField(
-        max_length=20
-    )
-
-    incubation_status = models.CharField(
-        max_length=100
+        max_length=10,
+        blank=True,
+        validators=[
+            phone_validator
+        ]
     )
 
     password_hash = models.CharField(
@@ -42,5 +63,16 @@ class Startup(models.Model):
         auto_now=True
     )
 
+    class Meta:
+
+        ordering = [
+            "startup_id"
+        ]
+
     def __str__(self):
-        return f"{self.startup_id} - {self.name}"
+
+        return (
+            f"{self.startup_id}"
+            " - "
+            f"{self.name}"
+        )

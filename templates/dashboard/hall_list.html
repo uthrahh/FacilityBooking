@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                Halls
+
+            </h2>
+
+            <small class="text-muted">
+
+                Manage conference halls and meeting rooms
+
+            </small>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'hall_add' %}"
+                class="btn btn-primary"
+            >
+                + Add Hall
+            </a>
+
+        </div>
+
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="card shadow">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th width="120">
+
+                            Hall ID
+
+                        </th>
+
+                        <th>
+
+                            Hall Name
+
+                        </th>
+
+                        <th width="140">
+
+                            Capacity
+
+                        </th>
+
+                        <th>
+
+                            Description
+
+                        </th>
+
+                        <th width="120">
+
+                            Status
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for hall in halls %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ hall.hall_id }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ hall.name }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            {{ hall.capacity }}
+
+                        </td>
+
+                        <td>
+
+                            {{ hall.description|default:"-" }}
+
+                        </td>
+
+                        <td>
+
+                            {% if hall.is_active %}
+
+                                <span class="badge bg-success">
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center"
+                        >
+
+                            No Halls Available
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

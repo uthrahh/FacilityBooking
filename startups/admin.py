@@ -9,14 +9,21 @@ class StartupAdmin(admin.ModelAdmin):
     list_display = (
         "startup_id",
         "name",
-        "founder_name",
         "email",
         "phone",
-        "incubation_status",
-        "is_active"
+        "is_active",
     )
 
     search_fields = (
         "startup_id",
-        "name"
+        "name",
+        "email",
+    )
+
+    list_filter = (
+        "is_active",
+    )
+
+    ordering = (
+        "startup_id",
     )

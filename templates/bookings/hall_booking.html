@@ -2,21 +2,445 @@
 
 {% block content %}
 
-<h2>Book Hall</h2>
+<div class="container mt-4">
 
-<form method="post">
+    <div class="card shadow">
 
-    {% csrf_token %}
+        <div class="card-header bg-primary text-white">
 
-    {{ form.as_p }}
+            <h3>
+                Book Hall
+            </h3>
 
-    <button
-        class="btn btn-primary">
+        </div>
 
-        Submit Booking
+        <div class="card-body">
 
-    </button>
+            <form method="post">
 
-</form>
-<script src="/static/js/hall_availability.js"></script>
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Hall
+                        </label>
+
+                        {{ form.hall }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Date
+                        </label>
+
+                        {{ form.booking_date }}
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            From Time
+                        </label>
+
+                        {{ form.from_time }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            To Time
+                        </label>
+
+                        {{ form.to_time }}
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5>
+                    Utilities
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="form-check mb-3">
+
+                            {{ form.ac }}
+
+                            <label class="form-check-label">
+
+                                Air Conditioning
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="form-check mb-3">
+
+                            {{ form.projector }}
+
+                            <label class="form-check-label">
+
+                                Projector
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Number of Seats
+
+                    </label>
+
+                    {{ form.seats }}
+
+                    <small
+                        id="capacity-text"
+                        class="text-muted"
+                    >
+                    </small>
+
+                </div>
+
+                <div class="form-check mb-3">
+
+                    <input
+                        type="checkbox"
+                        id="mic-check"
+                        class="form-check-input"
+                    >
+
+                    <label
+                        class="form-check-label"
+                    >
+                        Require Microphones
+                    </label>
+
+                </div>
+
+                <div
+                    id="mic-box"
+                    style="display:none"
+                    class="mb-3"
+                >
+
+                    <label>
+
+                        Microphone Quantity
+
+                    </label>
+
+                    {{ form.mic_qty }}
+
+                </div>
+
+                <div class="form-check mb-3">
+
+                    <input
+                        type="checkbox"
+                        id="water-check"
+                        class="form-check-input"
+                    >
+
+                    <label
+                        class="form-check-label"
+                    >
+                        Require Water Bottles
+                    </label>
+
+                </div>
+
+                <div
+                    id="water-box"
+                    style="display:none"
+                    class="mb-3"
+                >
+
+                    <label>
+
+                        Water Bottle Quantity
+
+                    </label>
+
+                    {{ form.water_bottle_qty }}
+
+                </div>
+
+                <div
+                    id="availability"
+                    class="alert alert-success"
+                >
+
+                    Hall Available
+
+                </div>
+
+                <button
+                    class="btn btn-primary w-100"
+                >
+
+                    Submit Booking
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const hallCapacities = {
+
+{% for hall in form.fields.hall.queryset %}
+
+{{ hall.id }}:{{ hall.capacity }},
+
+{% endfor %}
+
+};
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+    document.getElementById(
+        "mic-check"
+    ).addEventListener(
+
+        "change",
+
+        function(){
+
+            document.getElementById(
+                "mic-box"
+            ).style.display=
+
+            this.checked?
+
+            "block":"none";
+
+            if(!this.checked){
+
+                document.getElementById(
+                    "id_mic_qty"
+                ).value=0;
+
+            }
+
+        }
+
+    );
+
+    document.getElementById(
+        "water-check"
+    ).addEventListener(
+
+        "change",
+
+        function(){
+
+            document.getElementById(
+                "water-box"
+            ).style.display=
+
+            this.checked?
+
+            "block":"none";
+
+            if(!this.checked){
+
+                document.getElementById(
+                    "id_water_bottle_qty"
+                ).value=0;
+
+            }
+
+        }
+
+    );
+
+    document.getElementById(
+        "id_hall"
+    ).addEventListener(
+
+        "change",
+
+        updateCapacity
+
+    );
+
+    document.getElementById(
+        "id_seats"
+    ).addEventListener(
+
+        "change",
+
+        validateSeats
+
+    );
+
+    document.getElementById(
+        "id_booking_date"
+    ).addEventListener(
+
+        "change",
+
+        checkAvailability
+
+    );
+
+    document.getElementById(
+        "id_from_time"
+    ).addEventListener(
+
+        "change",
+
+        checkAvailability
+
+    );
+
+    document.getElementById(
+        "id_to_time"
+    ).addEventListener(
+
+        "change",
+
+        checkAvailability
+
+    );
+
+});
+
+function updateCapacity(){
+
+    let hall=document.getElementById(
+        "id_hall"
+    ).value;
+
+    let cap=hallCapacities[hall];
+
+    document.getElementById(
+        "capacity-text"
+    ).innerHTML=
+
+    "Capacity : "+cap;
+
+}
+
+function validateSeats(){
+
+    let hall=document.getElementById(
+        "id_hall"
+    ).value;
+
+    let cap=hallCapacities[hall];
+
+    let seats=parseInt(
+
+        document.getElementById(
+            "id_seats"
+        ).value||0
+
+    );
+
+    if(seats>cap){
+
+        alert(
+
+            "Maximum capacity is "+cap
+
+        );
+
+        document.getElementById(
+            "id_seats"
+        ).value=cap;
+
+    }
+
+}
+
+function checkAvailability(){
+
+    let hall=document.getElementById(
+        "id_hall"
+    ).value;
+
+    let date=document.getElementById(
+        "id_booking_date"
+    ).value;
+
+    if(!hall||!date){
+
+        return;
+
+    }
+
+    fetch(
+
+        `/api/hall-availability/${hall}/?date=${date}`
+
+    )
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        let html="<b>Occupied Slots</b><ul>";
+
+        if(data.length===0){
+
+            html+="<li>Fully Available</li>";
+
+        }
+
+        data.forEach(function(slot){
+
+            html+=`<li>${slot.from} - ${slot.to}</li>`;
+
+        });
+
+        html+="</ul>";
+
+        document.getElementById(
+            "availability"
+        ).innerHTML=html;
+
+    });
+
+}
+
+</script>
+
 {% endblock %}

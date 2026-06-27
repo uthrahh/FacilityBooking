@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                Laboratories
+
+            </h2>
+
+            <small class="text-muted">
+
+                Manage laboratory master data
+
+            </small>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'lab_add' %}"
+                class="btn btn-primary"
+            >
+                + Add Lab
+            </a>
+
+        </div>
+
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="card shadow">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover table-bordered align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th width="120">
+
+                            Lab ID
+
+                        </th>
+
+                        <th>
+
+                            Laboratory
+
+                        </th>
+
+                        <th>
+
+                            Description
+
+                        </th>
+
+                        <th width="120">
+
+                            Equipment
+
+                        </th>
+
+                        <th width="120">
+
+                            Status
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for lab in labs %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ lab.lab_id }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ lab.name }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            {{ lab.description|default:"-" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ lab.equipments.count }}
+
+                        </td>
+
+                        <td>
+
+                            {% if lab.is_active %}
+
+                                <span class="badge bg-success">
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center"
+                        >
+
+                            No Labs Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

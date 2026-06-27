@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                Notifications
+
+            </h2>
+
+            <small class="text-muted">
+
+                Booking requests requiring administrator attention
+
+            </small>
+
+        </div>
+
+        <a
+            href="{% url 'admin_dashboard' %}"
+            class="btn btn-outline-secondary"
+        >
+            Dashboard
+        </a>
+
+    </div>
+
+    {% if lab_notifications or hall_notifications %}
+
+        <!-- LAB BOOKINGS -->
+
+        {% if lab_notifications %}
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header bg-primary text-white">
+
+                <h5 class="mb-0">
+
+                    Pending Lab Bookings
+
+                </h5>
+
+            </div>
+
+            <div class="card-body table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Timestamp</th>
+                            <th>Startup</th>
+                            <th>Lab</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Fee</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for booking in lab_notifications %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.startup.startup_id }}
+
+                                <br>
+
+                                <small>
+
+                                    {{ booking.startup.name }}
+
+                                </small>
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.lab.lab_id }}
+
+                                <br>
+
+                                <small>
+
+                                    {{ booking.lab.name }}
+
+                                </small>
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.booking_date|date:"d/m/Y" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.from_time }}
+
+                                -
+
+                                {{ booking.to_time }}
+
+                            </td>
+
+                            <td>
+
+                                ₹{{ booking.estimated_fee }}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'lab_booking_list' %}#booking-{{ booking.id }}"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    View
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <!-- HALL BOOKINGS -->
+
+        {% if hall_notifications %}
+
+        <div class="card shadow">
+
+            <div class="card-header bg-success text-white">
+
+                <h5 class="mb-0">
+
+                    Pending Hall Bookings
+
+                </h5>
+
+            </div>
+
+            <div class="card-body table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Timestamp</th>
+                            <th>Startup</th>
+                            <th>Hall</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for booking in hall_notifications %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.startup.startup_id }}
+
+                                <br>
+
+                                <small>
+
+                                    {{ booking.startup.name }}
+
+                                </small>
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.hall.hall_id }}
+
+                                <br>
+
+                                <small>
+
+                                    {{ booking.hall.name }}
+
+                                </small>
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.booking_date|date:"d/m/Y" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ booking.from_time }}
+
+                                -
+
+                                {{ booking.to_time }}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'hall_booking_list' %}#booking-{{ booking.id }}"
+                                    class="btn btn-success btn-sm"
+                                >
+                                    View
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% else %}
+
+        <div class="alert alert-success text-center">
+
+            <h4>
+
+                No Pending Notifications
+
+            </h4>
+
+            <p class="mb-0">
+
+                All booking requests have been processed.
+
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

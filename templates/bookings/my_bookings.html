@@ -2,278 +2,518 @@
 
 {% block content %}
 
-<h2 class="mb-4">
-    My Bookings
-</h2>
+<div class="container-fluid">
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success">
-            {{ message }}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            My Bookings
+        </h2>
+
+        <div>
+
+            <a
+                href="{% url 'lab_booking' %}"
+                class="btn btn-primary"
+            >
+                Book Lab
+            </a>
+
+            <a
+                href="{% url 'hall_booking' %}"
+                class="btn btn-success"
+            >
+                Book Hall
+            </a>
+
         </div>
-    {% endfor %}
-{% endif %}
-
-<div class="card mb-5">
-
-    <div class="card-header">
-        <h4>Lab Bookings</h4>
-    </div>
-
-    <div class="card-body">
-
-        <table class="table table-bordered table-striped">
-
-            <thead>
-
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Lab</th>
-                    <th>Type</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Estimated Fee</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            {% for booking in lab_bookings %}
-
-                <tr>
-
-                    <td>
-                        {{ booking.id }}
-                    </td>
-
-                    <td>
-                        {{ booking.booking_date }}
-                    </td>
-
-                    <td>
-                        {{ booking.lab }}
-                    </td>
-
-                    <td>
-
-                        {% if booking.is_full_lab %}
-                            Full Lab
-                        {% else %}
-                            Equipment
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-                        {{ booking.from_time }}
-                    </td>
-
-                    <td>
-                        {{ booking.to_time }}
-                    </td>
-
-                    <td>
-                        ₹{{ booking.estimated_fee }}
-                    </td>
-
-                    <td>
-                        {{ booking.get_status_display }}
-                    </td>
-
-                    <td>
-                        <a
-                        href="{% url 'edit_lab_booking' booking.id %}"
-                        class="btn btn-warning btn-sm">
-
-                        Edit
-
-                        </a>
-                        {% if booking.status != "CANCELLED" %}
-
-                            <a
-                                href="{% url 'cancel_lab_booking' booking.id %}"
-                                class="btn btn-danger btn-sm">
-
-                                Cancel
-
-                            </a>
-
-                        {% endif %}
-
-                    </td>
-
-                </tr>
-
-            {% empty %}
-
-                <tr>
-
-                    <td colspan="9" class="text-center">
-
-                        No Lab Bookings Found
-
-                    </td>
-
-                </tr>
-
-            {% endfor %}
-
-            </tbody>
-
-        </table>
 
     </div>
 
-</div>
+    {% if messages %}
 
-<div class="card">
+        {% for message in messages %}
 
-    <div class="card-header">
-        <h4>Hall Bookings</h4>
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- LAB BOOKINGS -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                Lab Bookings
+
+            </h4>
+
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Booked On</th>
+
+                        <th>Startup</th>
+
+                        <th>Date</th>
+
+                        <th>Time</th>
+
+                        <th>Lab</th>
+
+                        <th>Equipment</th>
+
+                        <th>Estimated Fee</th>
+
+                        <th>Status</th>
+
+                        <th width="180">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for booking in lab_bookings %}
+
+                    <tr id="booking-{{ booking.id }}">
+
+                        <td>
+
+                            {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.startup.startup_id }}
+
+                            <br>
+
+                            {{ booking.startup.name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.booking_date|date:"d/m/Y" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.from_time }}
+
+                            -
+
+                            {{ booking.to_time }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.lab.lab_id }}
+
+                            <br>
+
+                            {{ booking.lab.name }}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.is_full_lab %}
+
+                                <span class="badge bg-primary">
+
+                                    Full Lab
+
+                                </span>
+
+                            {% else %}
+
+                                {% for item in booking.equipments.all %}
+
+                                    <div>
+
+                                        {{ item.equipment.equipment_id }}
+
+                                        -
+
+                                        {{ item.equipment.name }}
+
+                                    </div>
+
+                                {% empty %}
+
+                                    -
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            ₹{{ booking.estimated_fee }}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.status == "NEW" %}
+
+                                <span class="badge bg-secondary">
+
+                                    New Booking
+
+                                </span>
+
+                            {% elif booking.status == "APPROVED" %}
+
+                                <span class="badge bg-success">
+
+                                    Approved
+
+                                </span>
+
+                            {% elif booking.status == "REJECTED" %}
+
+                                <span class="badge bg-danger">
+
+                                    Rejected
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-dark">
+
+                                    Cancelled
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.status == "NEW" %}
+
+                                <a
+                                    href="{% url 'edit_lab_booking' booking.id %}"
+                                    class="btn btn-warning btn-sm"
+                                >
+                                    Edit
+                                </a>
+
+                                <a
+                                    href="{% url 'cancel_lab_booking' booking.id %}"
+                                    class="btn btn-danger btn-sm"
+                                >
+                                    Cancel
+                                </a>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            class="text-center"
+                        >
+
+                            No Lab Bookings
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
 
-    <div class="card-body">
+    <!-- HALL BOOKINGS -->
 
-        <table class="table table-bordered table-striped">
+    <div class="card shadow">
 
-            <thead>
+        <div class="card-header bg-success text-white">
 
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Hall</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>AC</th>
-                    <th>Projector</th>
-                    <th>Seats</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
+            <h4 class="mb-0">
 
-            </thead>
+                Hall Bookings
 
-            <tbody>
+            </h4>
 
-            {% for booking in hall_bookings %}
+        </div>
 
-                <tr>
+        <div class="card-body table-responsive">
 
-                    <td>
-                        {{ booking.id }}
-                    </td>
+            <table class="table table-bordered table-hover align-middle">
 
-                    <td>
-                        {{ booking.booking_date }}
-                    </td>
+                <thead class="table-light">
 
-                    <td>
-                        {{ booking.hall }}
-                    </td>
+                    <tr>
 
-                    <td>
-                        {{ booking.from_time }}
-                    </td>
+                        <th>Booked On</th>
 
-                    <td>
-                        {{ booking.to_time }}
-                    </td>
+                        <th>Startup</th>
 
-                    <td>
+                        <th>Date</th>
 
-                        {% if booking.ac %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
+                        <th>Time</th>
 
-                    </td>
+                        <th>Hall</th>
 
-                    <td>
+                        <th>Utilities</th>
 
-                        {% if booking.projector %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
+                        <th>Status</th>
 
-                    </td>
+                        <th width="180">
+                            Actions
+                        </th>
 
-                    <td>
-                        {{ booking.seats }}
-                    </td>
+                    </tr>
 
-                    <td>
-                        {{ booking.get_status_display }}
-                    </td>
+                </thead>
 
-                    <td>
-                        <a
-                        href="{% url 'edit_hall_booking' booking.id %}"
-                        class="btn btn-warning btn-sm">
+                <tbody>
 
-                        Edit
+                {% for booking in hall_bookings %}
 
-                        </a>
-                        {% if booking.status != "CANCELLED" %}
+                    <tr id="booking-{{ booking.id }}">
 
-                            <a
-                                href="{% url 'cancel_hall_booking' booking.id %}"
-                                class="btn btn-danger btn-sm">
+                        <td>
 
-                                Cancel
+                            {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
 
-                            </a>
+                        </td>
 
-                        {% endif %}
+                        <td>
 
-                    </td>
+                            {{ booking.startup.startup_id }}
 
-                </tr>
+                            <br>
 
-            {% empty %}
+                            {{ booking.startup.name }}
 
-                <tr>
+                        </td>
 
-                    <td colspan="10" class="text-center">
+                        <td>
 
-                        No Hall Bookings Found
+                            {{ booking.booking_date|date:"d/m/Y" }}
 
-                    </td>
+                        </td>
 
-                </tr>
+                        <td>
 
-            {% endfor %}
+                            {{ booking.from_time }}
 
-            </tbody>
+                            -
 
-        </table>
+                            {{ booking.to_time }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.hall.hall_id }}
+
+                            <br>
+
+                            {{ booking.hall.name }}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.ac %}
+
+                                <span class="badge bg-info">
+
+                                    AC
+
+                                </span>
+
+                            {% endif %}
+
+                            {% if booking.projector %}
+
+                                <span class="badge bg-primary">
+
+                                    Projector
+
+                                </span>
+
+                            {% endif %}
+
+                            <div>
+
+                                Seats :
+                                {{ booking.seats }}
+
+                            </div>
+
+                            <div>
+
+                                Mic :
+
+                                {% if booking.mic_qty %}
+
+                                    {{ booking.mic_qty }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </div>
+
+                            <div>
+
+                                Water :
+
+                                {% if booking.water_bottle_qty %}
+
+                                    {{ booking.water_bottle_qty }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.status == "NEW" %}
+
+                                <span class="badge bg-secondary">
+
+                                    New Booking
+
+                                </span>
+
+                            {% elif booking.status == "APPROVED" %}
+
+                                <span class="badge bg-success">
+
+                                    Approved
+
+                                </span>
+
+                            {% elif booking.status == "REJECTED" %}
+
+                                <span class="badge bg-danger">
+
+                                    Rejected
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-dark">
+
+                                    Cancelled
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.status == "NEW" %}
+
+                                <a
+                                    href="{% url 'edit_hall_booking' booking.id %}"
+                                    class="btn btn-warning btn-sm"
+                                >
+                                    Edit
+                                </a>
+
+                                <a
+                                    href="{% url 'cancel_hall_booking' booking.id %}"
+                                    class="btn btn-danger btn-sm"
+                                >
+                                    Cancel
+                                </a>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="text-center"
+                        >
+
+                            No Hall Bookings
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
-
-</div>
-
-<div class="mt-4">
-
-    <a
-        href="{% url 'lab_booking' %}"
-        class="btn btn-primary">
-
-        Book Lab
-
-    </a>
-
-    <a
-        href="{% url 'hall_booking' %}"
-        class="btn btn-success">
-
-        Book Hall
-
-    </a>
 
 </div>
 

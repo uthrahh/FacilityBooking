@@ -1,130 +1,163 @@
 import csv
 import io
 
+from django.contrib import messages
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 
 from .forms import (
     LabCSVUploadForm,
-    EquipmentCSVUploadForm
+    EquipmentCSVUploadForm,
 )
 
 from .models import (
     Lab,
-    Equipment
+    Equipment,
 )
-def upload_labs_csv(
-    request
-):
 
-    if request.method == "POST":
+from accounts.decorators import (
+    admin_login_required,
+)
 
-        form = LabCSVUploadForm(
-            request.POST,
-            request.FILES
-        )
 
-        if form.is_valid():
+@admin_login_required
+def upload_labs_csv(request):
 
-            csv_file = request.FILES[
-                "csv_file"
-            ]
-
-            data = csv_file.read().decode(
-                "utf-8"
-            )
-
-            reader = csv.DictReader(
-                io.StringIO(data)
-            )
-
-            for row in reader:
-
-                Lab.objects.update_or_create(
-                    lab_id=row["lab_id"],
-                    defaults={
-                        "name":
-                        row["name"]
-                    }
-                )
-
-            return redirect(
-                "/admin/"
-            )
-
-    else:
-
-        form = LabCSVUploadForm()
-
-    return render(
-        request,
-        "labs/upload_labs.html",
-        {
-            "form": form
-        }
+    form = LabCSVUploadForm(
+        request.POST or None,
+        request.FILES or None
     )
 
-def upload_equipment_csv(
-    request
-):
+    if request.method == "POST" and form.is_valid():
 
-    if request.method == "POST":
+        csv_file = request.FILES["csv_file"]
 
-        form = EquipmentCSVUploadForm(
-            request.POST,
-            request.FILES
+        data = csv_file.read().decode(
+            "utf-8"
         )
 
-        if form.is_valid():
+        reader = csv.DictReader(
+            io.StringIO(data)
+        )
 
-            csv_file = request.FILES[
-                "csv_file"
-            ]
+        count = 0
 
-            data = csv_file.read().decode(
-                "utf-8"
+        for row in reader:
+
+            if not row.get("lab_id"):
+                continue
+
+            Lab.objects.update_or_create(
+
+                lab_id=row["lab_id"].strip(),
+
+                defaults={
+
+                    "name": row["name"].strip()
+
+                }
+
             )
 
-            reader = csv.DictReader(
-                io.StringIO(data)
-            )
+            count += 1
 
-            for row in reader:
+        messages.success(
+            request,
+            f"{count} Labs Imported Successfully."
+        )
 
-                lab = Lab.objects.get(
-                    lab_id=row["lab_id"]
-                )
-
-                Equipment.objects.update_or_create(
-                    equipment_id=row[
-                        "equipment_id"
-                    ],
-                    defaults={
-                        "name":
-                        row["name"],
-
-                        "lab":
-                        lab,
-
-                        "fee_per_hour":
-                        row[
-                            "fee_per_hour"
-                        ]
-                    }
-                )
-
-            return redirect(
-                "/admin/"
-            )
-
-    else:
-
-        form = EquipmentCSVUploadForm()
+        return redirect(
+            "lab_list"
+        )
 
     return render(
+
         request,
-        "labs/upload_equipment.html",
+
+        "labs/upload_labs.html",
+
         {
             "form": form
         }
+
+    )
+
+
+@admin_login_required
+def upload_equipment_csv(request):
+
+    form = EquipmentCSVUploadForm(
+        request.POST or None,
+        request.FILES or None
+    )
+
+    if request.method == "POST" and form.is_valid():
+
+        csv_file = request.FILES["csv_file"]
+
+        data = csv_file.read().decode(
+            "utf-8"
+        )
+
+        reader = csv.DictReader(
+            io.StringIO(data)
+        )
+
+        count = 0
+
+        for row in reader:
+
+            try:
+
+                lab = Lab.objects.get(
+
+                    lab_id=row["lab_id"].strip()
+
+                )
+
+            except Lab.DoesNotExist:
+
+                continue
+
+            Equipment.objects.update_or_create(
+
+                equipment_id=row["equipment_id"].strip(),
+
+                defaults={
+
+                    "name": row["name"].strip(),
+
+                    "lab": lab,
+
+                    "fee_per_hour": row["fee_per_hour"]
+
+                }
+
+            )
+
+            count += 1
+
+        messages.success(
+
+            request,
+
+            f"{count} Equipment Imported Successfully."
+
+        )
+
+        return redirect(
+            "equipment_list"
+        )
+
+    return render(
+
+        request,
+
+        "labs/upload_equipment.html",
+
+        {
+            "form": form
+        }
+
     )

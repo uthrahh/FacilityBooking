@@ -1,11 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-
-from startups.models import Startup
-
 from bookings.models import (
     LabBooking,
-    HallBooking
+    HallBooking,
 )
 from accounts.decorators import (
     startup_login_required
@@ -27,54 +24,41 @@ from accounts.decorators import (
 
 from notifications.models import Notification
 
+@admin_login_required
 def admin_dashboard(
     request
 ):
-
-    if not request.user.is_authenticated:
-
-        return redirect(
-            "admin_login"
-        )
-
-    startup_count = (
-        Startup.objects.count()
-    )
-
-    lab_count = (
-        Lab.objects.count()
-    )
-
-    equipment_count = (
-        Equipment.objects.count()
-    )
-
-    hall_count = (
-        Hall.objects.count()
-    )
-
-    pending_lab = (
-        LabBooking.objects.filter(
-            status="NEW"
-        ).count()
-    )
-
-    pending_hall = (
-        HallBooking.objects.filter(
-            status="NEW"
-        ).count()
-    )
 
     return render(
         request,
         "dashboard/admin_dashboard.html",
         {
-            "startup_count": startup_count,
-            "lab_count": lab_count,
-            "equipment_count": equipment_count,
-            "hall_count": hall_count,
-            "pending_lab": pending_lab,
-            "pending_hall": pending_hall
+            "startup_count":
+            Startup.objects.count(),
+
+            "lab_count":
+            Lab.objects.count(),
+
+            "equipment_count":
+            Equipment.objects.count(),
+
+            "hall_count":
+            Hall.objects.count(),
+
+            "pending_lab":
+            LabBooking.objects.filter(
+                status="NEW"
+            ).count(),
+
+            "pending_hall":
+            HallBooking.objects.filter(
+                status="NEW"
+            ).count(),
+
+            "notification_count":
+            Notification.objects.filter(
+                is_read=False
+            ).count(),
         }
     )
 
@@ -142,17 +126,20 @@ def startup_dashboard(
         }
     )
 
-def calendar_view(request):
+@admin_login_required
+def calendar(request):
 
     return render(
         request,
-        "dashboard/calendar.html"
+        "dashboard/calendar.html",
     )
 
 @admin_login_required
 def startup_list(request):
 
-    startups = Startup.objects.all()
+    startups = Startup.objects.order_by(
+        "startup_id"
+    )
 
     return render(
         request,
@@ -189,7 +176,9 @@ def startup_add(request):
 @admin_login_required
 def lab_list(request):
 
-    labs = Lab.objects.all()
+    labs = Lab.objects.order_by(
+        "lab_id"
+    )
 
     return render(
         request,
@@ -227,11 +216,31 @@ def lab_add(request):
 def lab_booking_list(request):
 
     bookings = (
+
         LabBooking.objects
+
         .select_related(
+
             "startup",
+
             "lab"
+
         )
+
+        .prefetch_related(
+
+            "equipments",
+
+            "equipments__equipment"
+
+        )
+
+        .order_by(
+
+            "-booking_timestamp"
+
+        )
+
     )
 
     return render(
@@ -243,37 +252,30 @@ def lab_booking_list(request):
     )
 
 @admin_login_required
-def approve_lab_booking(
-    request,
-    booking_id
+def equipment_list(
+    request
 ):
 
-    booking = (
-        LabBooking.objects.get(
-            id=booking_id
+    equipments = (
+
+        Equipment.objects
+
+        .select_related(
+            "lab"
         )
-    )
 
-    booking.status = "APPROVED"
+        .order_by(
+            "equipment_id"
+        )
 
-    booking.save()
-
-    return redirect(
-        "lab_booking_list"
-    )
-
-@admin_login_required
-def equipment_list(request):
-
-    equipments = Equipment.objects.select_related(
-        "lab"
     )
 
     return render(
         request,
         "dashboard/equipment_list.html",
         {
-            "equipments": equipments
+            "equipments":
+            equipments
         }
     )
 
@@ -305,7 +307,9 @@ def equipment_add(request):
 @admin_login_required
 def hall_list(request):
 
-    halls = Hall.objects.all()
+    halls = Hall.objects.order_by(
+        "hall_id"
+    )
 
     return render(
         request,
@@ -344,11 +348,23 @@ def hall_add(request):
 def hall_booking_list(request):
 
     bookings = (
+
         HallBooking.objects
+
         .select_related(
+
             "startup",
+
             "hall"
+
         )
+
+        .order_by(
+
+            "-booking_timestamp"
+
+        )
+
     )
 
     return render(
@@ -357,25 +373,6 @@ def hall_booking_list(request):
         {
             "bookings": bookings
         }
-    )
-
-
-@admin_login_required
-def approve_hall_booking(
-    request,
-    booking_id
-):
-
-    booking = HallBooking.objects.get(
-        id=booking_id
-    )
-
-    booking.status = "APPROVED"
-
-    booking.save()
-
-    return redirect(
-        "hall_booking_list"
     )
 
 

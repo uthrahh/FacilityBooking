@@ -1,98 +1,335 @@
+{% load static %}
+
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
-<title>
-Facility Booking
-</title>
+    <meta charset="UTF-8">
 
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-rel="stylesheet">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+
+        Facility Booking System
+
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
+{% if request.user.is_staff %}
 
-<div class="container-fluid">
+<div class="sidebar">
 
-<a
-class="navbar-brand"
-href="/">
+    <h3>
 
-CIIC Facility Booking
+        Facility Booking
 
-</a>
+    </h3>
 
-<div>
+    <hr>
 
-<a
-href="/dashboard/"
-class="btn btn-outline-light">
+    <a href="{% url 'admin_dashboard' %}">
 
-Dashboard
+        <i class="bi bi-speedometer2"></i>
 
-</a>
+        Dashboard
 
-<a
-href="/my-bookings/"
-class="btn btn-outline-light">
+    </a>
 
-Bookings
+    <a href="{% url 'startup_list' %}">
 
-</a>
+        <i class="bi bi-buildings"></i>
 
-<a
-href="/calendar/"
-class="btn btn-outline-light">
+        Startups
 
-Calendar
+    </a>
 
-</a>
+    <a href="{% url 'lab_list' %}">
 
-<a
-href="/notifications/"
-class="btn btn-outline-light">
+        <i class="bi bi-cpu"></i>
 
-Notifications
+        Labs
 
-{% if unread_notifications > 0 %}
+    </a>
 
-<span
-class="badge bg-danger">
+    <a href="{% url 'equipment_list' %}">
 
-{{ unread_notifications }}
+        <i class="bi bi-tools"></i>
 
-</span>
+        Equipment
 
-{% endif %}
+    </a>
 
-</a>
+    <a href="{% url 'hall_list' %}">
 
-<a
-href="/logout/"
-class="btn btn-danger">
+        <i class="bi bi-building"></i>
 
-Logout
+        Halls
 
-</a>
+    </a>
+
+    <a href="{% url 'lab_booking_list' %}">
+
+        <i class="bi bi-calendar2-week"></i>
+
+        Lab Bookings
+
+    </a>
+
+    <a href="{% url 'hall_booking_list' %}">
+
+        <i class="bi bi-calendar-check"></i>
+
+        Hall Bookings
+
+    </a>
+
+    <a href="{% url 'calendar' %}">
+
+        <i class="bi bi-calendar3"></i>
+
+        Calendar
+
+    </a>
+
+    <a href="{% url 'notification_list' %}">
+
+        <i class="bi bi-bell"></i>
+
+        Notifications
+
+        {% if notification_count %}
+
+            <span class="badge bg-danger float-end">
+
+                {{ notification_count }}
+
+            </span>
+
+        {% endif %}
+
+    </a>
+
+    <hr>
+
+    <a href="{% url 'logout' %}">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        Logout
+
+    </a>
 
 </div>
 
-</div>
+<div class="main-content">
+
+{% else %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+
+    <div class="container-fluid">
+
+        <a
+            class="navbar-brand"
+            href="/"
+        >
+
+            Facility Booking
+
+        </a>
+
+        <button
+            class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+
+            <span class="navbar-toggler-icon">
+
+            </span>
+
+        </button>
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+        >
+
+            <ul class="navbar-nav ms-auto">
+
+                {% if request.session.startup_id %}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'startup_dashboard' %}"
+                        >
+
+                            Dashboard
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'lab_booking' %}"
+                        >
+
+                            Book Lab
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'hall_booking' %}"
+                        >
+
+                            Book Hall
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'my_bookings' %}"
+                        >
+
+                            My Bookings
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'logout' %}"
+                        >
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
+                {% else %}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'startup_login' %}"
+                        >
+
+                            Startup Login
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'startup_signup' %}"
+                        >
+
+                            Signup
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'admin_login' %}"
+                        >
+
+                            Admin Login
+
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+    </div>
 
 </nav>
 
 <div class="container mt-4">
 
+{% endif %}
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="alert alert-info alert-dismissible fade show">
+
+            {{ message }}
+
+            <button
+                class="btn-close"
+                data-bs-dismiss="alert"
+            >
+
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
 {% block content %}
+
 {% endblock %}
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

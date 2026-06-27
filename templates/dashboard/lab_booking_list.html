@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                Lab Bookings
+
+            </h2>
+
+            <small class="text-muted">
+
+                Review and manage laboratory bookings
+
+            </small>
+
+        </div>
+
+        <a
+            href="{% url 'calendar' %}"
+            class="btn btn-outline-primary"
+        >
+            Calendar View
+        </a>
+
+    </div>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <div class="card shadow">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Booked On</th>
+
+                        <th>Startup</th>
+
+                        <th>Date</th>
+
+                        <th>Time</th>
+
+                        <th>Lab</th>
+
+                        <th>Equipment</th>
+
+                        <th>Estimated Fee</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for booking in bookings %}
+
+                    <tr id="booking-{{ booking.id }}">
+
+                        <td>
+
+                            {{ booking.booking_timestamp|date:"d/m/Y H:i" }}
+
+                        </td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ booking.startup.startup_id }}
+
+                            </strong>
+
+                            <br>
+
+                            {{ booking.startup.name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.booking_date|date:"d/m/Y" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ booking.from_time }}
+
+                            -
+
+                            {{ booking.to_time }}
+
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="badge"
+                                style="
+                                background:#D6EAF8;
+                                color:#000;
+                                "
+                            >
+
+                                {{ booking.lab.lab_id }}
+
+                            </span>
+
+                            <br>
+
+                            {{ booking.lab.name }}
+
+                        </td>
+
+                        <td>
+
+                            {% if booking.is_full_lab %}
+
+                                <span
+                                    class="badge bg-primary"
+                                >
+
+                                    Full Lab
+
+                                </span>
+
+                            {% else %}
+
+                                {% for item in booking.equipments.all %}
+
+                                    <div>
+
+                                        {{ item.equipment.equipment_id }}
+
+                                        -
+
+                                        {{ item.equipment.name }}
+
+                                    </div>
+
+                                {% empty %}
+
+                                    -
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            ₹{{ booking.estimated_fee }}
+
+                        </td>
+
+                        <td>
+
+                            <form
+                                method="post"
+                                action="{% url 'update_lab_booking_status' booking.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <select
+                                    name="status"
+                                    class="form-select form-select-sm"
+                                    onchange="this.form.submit()"
+                                >
+
+                                    <option
+                                        value="NEW"
+                                        {% if booking.status == "NEW" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        New Booking
+                                    </option>
+
+                                    <option
+                                        value="APPROVED"
+                                        {% if booking.status == "APPROVED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Approved
+                                    </option>
+
+                                    <option
+                                        value="REJECTED"
+                                        {% if booking.status == "REJECTED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Rejected
+                                    </option>
+
+                                    <option
+                                        value="CANCELLED"
+                                        {% if booking.status == "CANCELLED" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Cancelled
+                                    </option>
+
+                                </select>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="text-center"
+                        >
+
+                            No Lab Bookings Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

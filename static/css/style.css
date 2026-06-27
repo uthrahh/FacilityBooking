@@ -1,0 +1,462 @@
+:root{
+
+    --primary:#0d6efd;
+
+    --success:#198754;
+
+    --warning:#ffc107;
+
+    --danger:#dc3545;
+
+    --dark:#212529;
+
+    --light:#f8f9fa;
+
+    --sidebar:#1f2937;
+
+    --sidebar-hover:#374151;
+
+}
+
+body{
+
+    background:#f4f6f9;
+
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+    box-shadow:
+
+        0 2px 10px
+
+        rgba(0,0,0,.08);
+
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+    width:250px;
+
+    min-height:100vh;
+
+    background:var(--sidebar);
+
+    color:#fff;
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    padding:25px;
+
+}
+
+.sidebar h3{
+
+    font-weight:700;
+
+    margin-bottom:30px;
+
+}
+
+.sidebar a{
+
+    display:block;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    padding:12px 15px;
+
+    margin-bottom:8px;
+
+    border-radius:8px;
+
+    transition:.25s;
+
+}
+
+.sidebar a:hover{
+
+    background:var(--sidebar-hover);
+
+    color:#fff;
+
+}
+
+.sidebar a.active{
+
+    background:var(--primary);
+
+}
+
+/* MAIN CONTENT */
+
+.main-content{
+
+    margin-left:270px;
+
+    padding:30px;
+
+}
+
+/* CARDS */
+
+.card{
+
+    border:none;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+        0 6px 18px
+
+        rgba(0,0,0,.08);
+
+}
+
+.card-header{
+
+    font-weight:600;
+
+}
+
+/* TABLES */
+
+.table{
+
+    vertical-align:middle;
+
+}
+
+.table thead{
+
+    background:#212529;
+
+    color:#fff;
+
+}
+
+.table-hover tbody tr:hover{
+
+    background:#eef5ff;
+
+}
+
+.table td,
+
+.table th{
+
+    padding:14px;
+
+}
+
+/* BUTTONS */
+
+.btn{
+
+    border-radius:8px;
+
+    font-weight:500;
+
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+}
+
+.btn-success{
+
+    background:var(--success);
+
+}
+
+.btn-warning{
+
+    color:#000;
+
+}
+
+.btn-danger{
+
+    background:var(--danger);
+
+}
+
+/* FORMS */
+
+.form-control,
+
+.form-select{
+
+    border-radius:8px;
+
+    min-height:44px;
+
+}
+
+.form-control:focus,
+
+.form-select:focus{
+
+    box-shadow:
+
+        0 0 0 .15rem
+
+        rgba(13,110,253,.15);
+
+}
+
+/* BADGES */
+
+.badge{
+
+    padding:8px 12px;
+
+    font-size:12px;
+
+    border-radius:20px;
+
+}
+
+/* DASHBOARD */
+
+.dashboard-card{
+
+    transition:.25s;
+
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* BOOKING ROWS */
+
+.equipment-row{
+
+    border-left:
+
+        5px solid
+
+        var(--primary);
+
+}
+
+.equipment-card{
+
+    border-left:
+
+        5px solid
+
+        var(--success);
+
+}
+
+/* CALENDAR */
+
+#calendar{
+
+    background:#fff;
+
+    padding:15px;
+
+    border-radius:10px;
+
+}
+
+.fc-toolbar-title{
+
+    font-size:22px;
+
+    font-weight:600;
+
+}
+
+.fc-event{
+
+    border:none !important;
+
+    border-radius:6px !important;
+
+    color:#000 !important;
+
+    font-weight:600;
+
+    padding:2px;
+
+}
+
+/* STATUS */
+
+.status-new{
+
+    background:#6c757d;
+
+    color:#fff;
+
+}
+
+.status-approved{
+
+    background:#198754;
+
+    color:#fff;
+
+}
+
+.status-rejected{
+
+    background:#dc3545;
+
+    color:#fff;
+
+}
+
+.status-cancelled{
+
+    background:#212529;
+
+    color:#fff;
+
+}
+
+/* LAB COLORS */
+
+.lab-color-1{
+
+    background:#D6EAF8;
+
+}
+
+.lab-color-2{
+
+    background:#D4EFDF;
+
+}
+
+.lab-color-3{
+
+    background:#FCF3CF;
+
+}
+
+.lab-color-4{
+
+    background:#FADBD8;
+
+}
+
+.lab-color-5{
+
+    background:#EBDEF0;
+
+}
+
+/* HALL COLORS */
+
+.hall-color-1{
+
+    background:#FDEBD0;
+
+}
+
+.hall-color-2{
+
+    background:#E8F8F5;
+
+}
+
+.hall-color-3{
+
+    background:#F9EBEA;
+
+}
+
+.hall-color-4{
+
+    background:#EAF2F8;
+
+}
+
+.hall-color-5{
+
+    background:#F4ECF7;
+
+}
+
+/* NOTIFICATIONS */
+
+.notification-card{
+
+    border-left:
+
+        5px solid
+
+        var(--warning);
+
+}
+
+/* ALERTS */
+
+.alert{
+
+    border-radius:10px;
+
+}
+
+/* LOGIN */
+
+.login-card{
+
+    max-width:480px;
+
+    margin:auto;
+
+    margin-top:70px;
+
+}
+
+/* MOBILE */
+
+@media(max-width:992px){
+
+.sidebar{
+
+    position:relative;
+
+    width:100%;
+
+    min-height:auto;
+
+}
+
+.main-content{
+
+    margin-left:0;
+
+}
+
+}

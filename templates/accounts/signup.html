@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+
+    <div class="col-lg-7 col-md-9">
+
+        <div class="card shadow border-0">
+
+            <div class="card-header bg-primary text-white text-center">
+
+                <h3 class="mb-0">
+
+                    Startup Registration
+
+                </h3>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Startup ID
+
+                            </label>
+
+                            {{ form.startup_id }}
+
+                            <small class="text-muted">
+
+                                Exactly 4 digits
+
+                            </small>
+
+                            {% if form.startup_id.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.startup_id.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Startup Name
+
+                            </label>
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.name.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Email
+
+                            </label>
+
+                            {{ form.email }}
+
+                            {% if form.email.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.email.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Phone Number
+
+                            </label>
+
+                            {{ form.phone }}
+
+                            {% if form.phone.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.phone.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter Password"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Confirm Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            class="form-control"
+                            placeholder="Re-enter Password"
+                            required
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+
+                        Create Startup Account
+
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <div class="text-center">
+
+                    <a
+                        href="{% url 'startup_login' %}"
+                        class="btn btn-outline-secondary w-100"
+                    >
+
+                        Already have an account? Login
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

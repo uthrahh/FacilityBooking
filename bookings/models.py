@@ -1,11 +1,19 @@
 from django.db import models
 
+
 BOOKING_STATUS = [
+
     ("NEW", "New Booking"),
+
     ("APPROVED", "Approved"),
+
     ("REJECTED", "Rejected"),
+
     ("CANCELLED", "Cancelled"),
+
 ]
+
+
 class LabBooking(models.Model):
 
     startup = models.ForeignKey(
@@ -35,6 +43,7 @@ class LabBooking(models.Model):
         decimal_places=2,
         default=0
     )
+
     is_full_lab = models.BooleanField(
         default=False
     )
@@ -53,18 +62,44 @@ class LabBooking(models.Model):
         auto_now_add=True
     )
 
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     admin_remarks = models.TextField(
         blank=True,
         null=True
     )
 
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    class Meta:
 
+        ordering = [
+            "-booking_timestamp"
+        ]
+
+    @property
+    def equipment_list(self):
+
+        return ", ".join(
+            [
+                item.equipment.equipment_id +
+                " - " +
+                item.equipment.name
+                for item in self.equipments.select_related(
+                    "equipment"
+                )
+            ]
+        )
 
     def __str__(self):
-        return f"{self.startup} - {self.lab} - {self.booking_date}"
+
+        return (
+            f"{self.startup.startup_id}"
+            " - "
+            f"{self.lab.lab_id}"
+            " - "
+            f"{self.booking_date}"
+        )
 
 
 class LabBookingEquipment(models.Model):
@@ -94,8 +129,20 @@ class LabBookingEquipment(models.Model):
         decimal_places=2
     )
 
+    class Meta:
+
+        ordering = [
+            "equipment__equipment_id"
+        ]
+
     def __str__(self):
-        return f"{self.booking.id} - {self.equipment.name}"
+
+        return (
+            f"{self.booking.id}"
+            " - "
+            f"{self.equipment.name}"
+        )
+
 
 class HallBooking(models.Model):
 
@@ -108,11 +155,13 @@ class HallBooking(models.Model):
         "halls.Hall",
         on_delete=models.CASCADE
     )
+
     booking_date = models.DateField()
 
     from_time = models.TimeField()
 
     to_time = models.TimeField()
+
     ac = models.BooleanField(
         default=False
     )
@@ -133,6 +182,12 @@ class HallBooking(models.Model):
         default=0
     )
 
+    estimated_fee = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
     status = models.CharField(
         max_length=20,
         choices=BOOKING_STATUS,
@@ -147,17 +202,59 @@ class HallBooking(models.Model):
         auto_now_add=True
     )
 
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     admin_remarks = models.TextField(
         blank=True,
         null=True
     )
 
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    class Meta:
+
+        ordering = [
+            "-booking_timestamp"
+        ]
+
+    @property
+    def utilities(self):
+
+        items = []
+
+        if self.ac:
+            items.append("AC")
+
+        if self.projector:
+            items.append("Projector")
+
+        if self.seats:
+            items.append(
+                f"Seats : {self.seats}"
+            )
+
+        if self.mic_qty:
+            items.append(
+                f"Mic : {self.mic_qty}"
+            )
+
+        if self.water_bottle_qty:
+            items.append(
+                f"Water : {self.water_bottle_qty}"
+            )
+
+        return ", ".join(items)
 
     def __str__(self):
-        return f"{self.startup} - {self.hall} - {self.booking_date}"
+
+        return (
+            f"{self.startup.startup_id}"
+            " - "
+            f"{self.hall.hall_id}"
+            " - "
+            f"{self.booking_date}"
+        )
+
 
 class BookingHistory(models.Model):
 
@@ -183,5 +280,18 @@ class BookingHistory(models.Model):
         auto_now_add=True
     )
 
+    class Meta:
+
+        ordering = [
+            "-timestamp"
+        ]
+
     def __str__(self):
-        return f"{self.booking_type} - {self.booking_id}"
+
+        return (
+            f"{self.booking_type}"
+            " - "
+            f"{self.booking_id}"
+            " - "
+            f"{self.new_status}"
+        )

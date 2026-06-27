@@ -2,130 +2,298 @@
 
 {% block content %}
 
-<h2>Book Lab</h2>
+<div class="container mt-4">
 
-<form method="post">
+    <div class="card shadow">
 
-    {% csrf_token %}
+        <div class="card-header bg-primary text-white">
 
-    {{ form.as_p }}
+            <h3>
 
-    <div id="equipment-container"></div>
+                Book Lab
 
-    <button
-        class="btn btn-primary">
+            </h3>
 
-        Submit Booking
+        </div>
 
-    </button>
+        <div class="card-body">
 
-</form>
-<script src="/static/js/lab_booking.js"></script>
-<script src="/static/js/lab_availability.js"></script>
-<script>
+            <form method="post">
 
-document
-.getElementById(
-    "id_lab"
-)
-.addEventListener(
-    "change",
-    loadEquipment
-);
+                {% csrf_token %}
 
-document
-.getElementById(
-    "id_booking_date"
-)
-.addEventListener(
-    "change",
-    loadEquipment
-);
+                {{ form.non_field_errors }}
 
-function loadEquipment()
-{
+                <div class="row">
 
-    let lab =
-        document.getElementById(
-            "id_lab"
-        ).value;
+                    <div class="col-md-6">
 
-    let date =
-        document.getElementById(
-            "id_booking_date"
-        ).value;
+                        {{ form.lab.label_tag }}
 
-    if(!lab || !date)
-    {
-        return;
-    }
-
-    fetch(
-        `/equipment/${lab}/?date=${date}`
-    )
-    .then(
-        response =>
-            response.json()
-    )
-    .then(
-        data =>
-        {
-
-            let container =
-                document.getElementById(
-                    "equipment-container"
-                );
-
-            container.innerHTML = "";
-
-            data.forEach(
-                eq =>
-                {
-
-                    let occupiedText = "";
-
-                    eq.occupied.forEach(
-                        slot =>
-                        {
-                            occupiedText +=
-                                `<li>
-                                    ${slot.from}
-                                    -
-                                    ${slot.to}
-                                </li>`;
-                        }
-                    );
-
-                    container.innerHTML +=
-                    `
-                    <div class="card mb-3">
-
-                        <div class="card-body">
-
-                            <h6>
-                                ${eq.name}
-                            </h6>
-
-                            <small>
-                                Occupied Slots
-                            </small>
-
-                            <ul>
-                                ${occupiedText}
-                            </ul>
-
-                        </div>
+                        {{ form.lab }}
 
                     </div>
-                    `;
+
+                    <div class="col-md-6">
+
+                        {{ form.booking_type.label_tag }}
+
+                        {{ form.booking_type }}
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        {{ form.booking_date.label_tag }}
+
+                        {{ form.booking_date }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        {{ form.from_time.label_tag }}
+
+                        {{ form.from_time }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        {{ form.to_time.label_tag }}
+
+                        {{ form.to_time }}
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div id="availability-calendar"></div>
+
+                <div id="equipment-container"></div>
+
+                <div
+                    id="equipment-section"
+                    class="mt-4"
+                >
+
+                    <h5>
+
+                        Equipment Selection
+
+                    </h5>
+
+                    <div id="equipment-rows"></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-success mt-2"
+                        onclick="addEquipmentRow()"
+                    >
+
+                        + Add Equipment
+
+                    </button>
+
+                </div>
+
+                <div class="alert alert-success mt-4">
+
+                    <strong>
+
+                        Estimated Fee :
+
+                    </strong>
+
+                    ₹
+
+                    <span id="fee-display">
+
+                        0.00
+
+                    </span>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+
+                    Submit Booking
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/static/js/lab_booking.js"></script>
+
+<script src="/static/js/lab_availability.js"></script>
+
+<script>
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function(){
+
+        let bookingType=document.getElementById(
+
+            "id_booking_type"
+
+        );
+
+        function toggleEquipment(){
+
+            if(!bookingType){
+
+                return;
+
+            }
+
+            if(
+
+                bookingType.value==="FULL_LAB"
+
+            ){
+
+                document.getElementById(
+
+                    "equipment-section"
+
+                ).style.display="none";
+
+            }
+
+            else{
+
+                document.getElementById(
+
+                    "equipment-section"
+
+                ).style.display="block";
+
+            }
+
+        }
+
+        if(bookingType){
+
+            bookingType.addEventListener(
+
+                "change",
+
+                toggleEquipment
+
+            );
+
+            toggleEquipment();
+
+        }
+
+        let lab=document.getElementById(
+
+            "id_lab"
+
+        );
+
+        let date=document.getElementById(
+
+            "id_booking_date"
+
+        );
+
+        if(lab){
+
+            lab.addEventListener(
+
+                "change",
+
+                function(){
+
+                    loadEquipment();
+
+                    loadAvailability();
 
                 }
+
             );
 
         }
-    );
 
-}
+        if(date){
+
+            date.addEventListener(
+
+                "change",
+
+                function(){
+
+                    loadEquipment();
+
+                    loadAvailability();
+
+                }
+
+            );
+
+        }
+
+        let from=document.getElementById(
+
+            "id_from_time"
+
+        );
+
+        let to=document.getElementById(
+
+            "id_to_time"
+
+        );
+
+        if(from){
+
+            from.addEventListener(
+
+                "change",
+
+                validateLabSlot
+
+            );
+
+        }
+
+        if(to){
+
+            to.addEventListener(
+
+                "change",
+
+                validateLabSlot
+
+            );
+
+        }
+
+    }
+
+);
 
 </script>
+
 {% endblock %}

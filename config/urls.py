@@ -1,54 +1,50 @@
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
+from django.urls import path, include
 from django.shortcuts import redirect
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect("admin_dashboard")
 
-    return redirect(
-        "startup_login"
-    )
+    if request.session.get("startup_id"):
+        return redirect("startup_dashboard")
+
+    return redirect("startup_login")
 
 
 urlpatterns = [
+
     path(
         "",
-        include(
-            "core.urls"
-        )
+        home,
+        name="home",
     ),
+
+    # Keep Django admin only if you still want it available
     path(
-        "",
-        home
+        "django-admin/",
+        admin.site.urls,
     ),
 
     path(
         "",
-        include(
-            "accounts.urls"
-        )
+        include("accounts.urls"),
     ),
 
     path(
         "",
-        include(
-            "bookings.urls"
-        )
+        include("bookings.urls"),
     ),
 
     path(
         "",
-        include(
-            "dashboard.urls"
-        )
+        include("dashboard.urls"),
     ),
 
     path(
-        "notifications/",
-        include(
-            "notifications.urls"
-        )
+        "",
+        include("notifications.urls"),
     ),
 
 ]

@@ -2,64 +2,149 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mt-5">
 
-<div class="col-md-4">
+    <div class="col-lg-5 col-md-6">
 
-<h2>
-Admin Login
-</h2>
+        <div class="card shadow border-0">
 
-<form method="post">
+            <div class="card-header bg-dark text-white text-center">
 
-{% csrf_token %}
+                <h3 class="mb-0">
 
-<div class="mb-3">
+                    Administrator Login
 
-<label>
-Username
-</label>
+                </h3>
 
-<input
-type="text"
-name="username"
-class="form-control">
+            </div>
 
-</div>
+            <div class="card-body p-4">
 
-<div class="mb-3">
+                {% if error %}
 
-<label>
-Password
-</label>
+                    <div class="alert alert-danger">
 
-<input
-type="password"
-name="password"
-class="form-control">
+                        {{ error }}
 
-</div>
+                    </div>
 
-<button
-class="btn btn-primary">
+                {% endif %}
 
-Login
+                {% if messages %}
 
-</button>
+                    {% for message in messages %}
 
-</form>
+                        <div class="alert alert-success">
 
-{% if error %}
+                            {{ message }}
 
-<div class="alert alert-danger mt-3">
+                        </div>
 
-{{ error }}
+                    {% endfor %}
 
-</div>
+                {% endif %}
 
-{% endif %}
+                <form method="post">
 
-</div>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Username
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            placeholder="Enter username"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter password"
+                            required
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark w-100"
+                    >
+
+                        Login
+
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <div class="text-center">
+
+                    <a
+                        href="{% url 'startup_login' %}"
+                        class="btn btn-outline-primary w-100"
+                    >
+
+                        Startup Login
+
+                    </a>
+
+                </div>
+
+                <hr>
+
+                <div class="alert alert-light border mb-0">
+
+                    <strong>
+
+                        Demo Admin Credentials
+
+                    </strong>
+
+                    <br>
+
+                    Username :
+                    <strong>
+
+                        admin
+
+                    </strong>
+
+                    <br>
+
+                    Password :
+                    <strong>
+
+                        admin123
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

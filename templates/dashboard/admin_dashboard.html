@@ -2,183 +2,298 @@
 
 {% block content %}
 
-<h2>
-Admin Dashboard
-</h2>
+<div class="container-fluid">
 
-<div class="row">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="col-md-2">
+        <div>
 
-<div class="card">
+            <h2 class="fw-bold">
 
-<div class="card-body">
+                Admin Dashboard
 
-<h5>
-Startups
-</h5>
+            </h2>
 
-<h2>
-{{ startup_count }}
-</h2>
+            <small class="text-muted">
 
-</div>
+                Facility Booking Management System
 
-</div>
+            </small>
 
-</div>
+        </div>
 
-<div class="col-md-2">
+        <div>
 
-<div class="card">
+            <a
+                href="{% url 'calendar' %}"
+                class="btn btn-outline-primary"
+            >
+                Calendar
+            </a>
 
-<div class="card-body">
+        </div>
 
-<h5>
-Labs
-</h5>
+    </div>
 
-<h2>
-{{ lab_count }}
-</h2>
+    <!-- STATISTICS -->
 
-</div>
+    <div class="row g-4 mb-4">
 
-</div>
+        <div class="col-lg-3">
 
-</div>
+            <div class="card shadow border-0">
 
-<div class="col-md-2">
+                <div class="card-body">
 
-<div class="card">
+                    <small class="text-muted">
 
-<div class="card-body">
+                        STARTUPS
 
-<h5>
-Equipment
-</h5>
+                    </small>
 
-<h2>
-{{ equipment_count }}
-</h2>
+                    <h2>
 
-</div>
+                        {{ startup_count }}
 
-</div>
+                    </h2>
 
-</div>
+                </div>
 
-<div class="col-md-2">
+            </div>
 
-<div class="card">
+        </div>
 
-<div class="card-body">
+        <div class="col-lg-3">
 
-<h5>
-Halls
-</h5>
+            <div class="card shadow border-0">
 
-<h2>
-{{ hall_count }}
-</h2>
+                <div class="card-body">
 
-</div>
+                    <small class="text-muted">
 
-</div>
+                        LABS
 
-</div>
+                    </small>
 
-<div class="col-md-2">
+                    <h2>
 
-<div class="card">
+                        {{ lab_count }}
 
-<div class="card-body">
+                    </h2>
 
-<h5>
-Pending Lab
-</h5>
+                </div>
 
-<h2>
-{{ pending_lab }}
-</h2>
+            </div>
 
-</div>
+        </div>
 
-</div>
+        <div class="col-lg-3">
 
-</div>
+            <div class="card shadow border-0">
 
-<div class="col-md-2">
+                <div class="card-body">
 
-<div class="card">
+                    <small class="text-muted">
 
-<div class="card-body">
+                        EQUIPMENT
 
-<h5>
-Pending Hall
-</h5>
+                    </small>
 
-<h2>
-{{ pending_hall }}
-</h2>
+                    <h2>
 
-</div>
+                        {{ equipment_count }}
 
-</div>
+                    </h2>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-<div class="mt-4">
+        </div>
 
-<a
-href="/admin/startups/startup/"
-class="btn btn-primary">
+        <div class="col-lg-3">
 
-Manage Startups
+            <div class="card shadow border-0">
 
-</a>
+                <div class="card-body">
 
-<a
-href="/admin/labs/lab/"
-class="btn btn-success">
+                    <small class="text-muted">
 
-Manage Labs
+                        HALLS
 
-</a>
+                    </small>
 
-<a
-href="/admin/labs/equipment/"
-class="btn btn-warning">
+                    <h2>
 
-Manage Equipment
+                        {{ hall_count }}
 
-</a>
+                    </h2>
 
-<a
-href="/admin/halls/hall/"
-class="btn btn-info">
+                </div>
 
-Manage Halls
+            </div>
 
-</a>
+        </div>
 
-<a
-href="/admin/bookings/labbooking/"
-class="btn btn-danger">
+    </div>
 
-Approve Lab Bookings
+    <!-- PENDING -->
 
-</a>
+    <div class="row g-4 mb-5">
 
-<a
-href="/admin/bookings/hallbooking/"
-class="btn btn-dark">
+        <div class="col-md-6">
 
-Approve Hall Bookings
+            <div class="card border-warning shadow">
 
-</a>
+                <div class="card-body">
+
+                    <h5>
+
+                        Pending Lab Bookings
+
+                    </h5>
+
+                    <h1 class="text-warning">
+
+                        {{ pending_lab }}
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card border-warning shadow">
+
+                <div class="card-body">
+
+                    <h5>
+
+                        Pending Hall Bookings
+
+                    </h5>
+
+                    <h1 class="text-warning">
+
+                        {{ pending_hall }}
+
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MANAGEMENT -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+
+                Management
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-lg-3 d-grid">
+
+                    <a
+                        href="{% url 'startup_list' %}"
+                        class="btn btn-primary btn-lg"
+                    >
+                        Startups
+                    </a>
+
+                </div>
+
+                <div class="col-lg-3 d-grid">
+
+                    <a
+                        href="{% url 'lab_list' %}"
+                        class="btn btn-success btn-lg"
+                    >
+                        Labs
+                    </a>
+
+                </div>
+
+                <div class="col-lg-3 d-grid">
+
+                    <a
+                        href="{% url 'equipment_list' %}"
+                        class="btn btn-info btn-lg text-white"
+                    >
+                        Equipment
+                    </a>
+
+                </div>
+
+                <div class="col-lg-3 d-grid">
+
+                    <a
+                        href="{% url 'hall_list' %}"
+                        class="btn btn-secondary btn-lg"
+                    >
+                        Halls
+                    </a>
+
+                </div>
+
+                <div class="col-lg-6 d-grid">
+
+                    <a
+                        href="{% url 'lab_booking_list' %}"
+                        class="btn btn-warning btn-lg"
+                    >
+                        Lab Bookings
+
+                        {% if pending_lab %}
+
+                            ({{ pending_lab }} Pending)
+
+                        {% endif %}
+
+                    </a>
+
+                </div>
+
+                <div class="col-lg-6 d-grid">
+
+                    <a
+                        href="{% url 'hall_booking_list' %}"
+                        class="btn btn-danger btn-lg"
+                    >
+                        Hall Bookings
+
+                        {% if pending_hall %}
+
+                            ({{ pending_hall }} Pending)
+
+                        {% endif %}
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

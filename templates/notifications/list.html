@@ -2,68 +2,205 @@
 
 {% block content %}
 
-<h2>
-Notifications
-</h2>
+<div class="container-fluid">
 
-<table class="table table-bordered">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<thead>
+        <div>
 
-<tr>
+            <h2 class="fw-bold">
 
-<th>
-Title
-</th>
+                Notifications
 
-<th>
-Message
-</th>
+            </h2>
 
-<th>
-Date
-</th>
+            <small class="text-muted">
 
-</tr>
+                Recent booking notifications
 
-</thead>
+            </small>
 
-<tbody>
+        </div>
 
-{% for n in notifications %}
+        <div>
 
-<tr>
+            <a
+                href="{% url 'mark_all_notifications_read' %}"
+                class="btn btn-success"
+            >
+                Mark All Read
+            </a>
 
-<td>
-{{ n.title }}
-</td>
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="btn btn-outline-secondary"
+            >
+                Dashboard
+            </a>
 
-<td>
-{{ n.message }}
-</td>
+        </div>
 
-<td>
-{{ n.created_at }}
-</td>
+    </div>
 
-</tr>
+    {% if notifications %}
 
-{% empty %}
+    <div class="card shadow">
 
-<tr>
+        <div class="card-body p-0">
 
-<td colspan="3">
+            <table class="table table-hover table-bordered mb-0">
 
-No Notifications
+                <thead class="table-dark">
 
-</td>
+                    <tr>
 
-</tr>
+                        <th width="180">
+                            Time
+                        </th>
 
-{% endfor %}
+                        <th width="100">
+                            Type
+                        </th>
 
-</tbody>
+                        <th>
+                            Title
+                        </th>
 
-</table>
+                        <th>
+                            Message
+                        </th>
+
+                        <th width="100">
+                            Status
+                        </th>
+
+                        <th width="150">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for notification in notifications %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ notification.created_at|date:"d/m/Y H:i" }}
+
+                        </td>
+
+                        <td>
+
+                            {% if notification.notification_type == "LAB" %}
+
+                                <span class="badge bg-primary">
+
+                                    Lab
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-success">
+
+                                    Hall
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {{ notification.title }}
+
+                        </td>
+
+                        <td>
+
+                            {{ notification.message }}
+
+                        </td>
+
+                        <td>
+
+                            {% if notification.is_read %}
+
+                                <span class="badge bg-success">
+
+                                    Read
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    Unread
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if not notification.is_read %}
+
+                                <a
+                                    href="{% url 'mark_notification_read' notification.id %}"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    Mark Read
+                                </a>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-success text-center">
+
+        <h4>
+
+            No Notifications
+
+        </h4>
+
+        <p class="mb-0">
+
+            There are currently no notifications.
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}
