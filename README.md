@@ -1,5 +1,4 @@
 # Facility Booking Management System
-## Project Documentation & Handover Guide
 
 ---
 
@@ -14,14 +13,6 @@ Facility Booking Management System
 > https://github.com/uthrahh/FacilityBooking
 > 
 
-**Developed By**
-
-Pavithra Uthrah R. K. - uthrahrk@gmail.com
-
-**Framework**
-
-Django 6
-
 #### Description
 
 The Facility Booking Management System is a web-based application developed to digitize the reservation and administration of laboratories, equipment, and meeting halls within an organization.
@@ -29,6 +20,14 @@ The Facility Booking Management System is a web-based application developed to d
 The system provides separate interfaces for Startup Users and Administrators. Startup users can request facility bookings, track their booking status, and receive notifications. Administrators can manage facilities, review booking requests, approve or reject reservations, and monitor system activities through an administrative dashboard.
 
 The application eliminates manual booking processes, prevents scheduling conflicts, centralizes facility management, and maintains complete booking history.
+
+**Framework**
+
+Django 6
+
+**Developed By**
+
+Pavithra Uthrah R. K. - uthrahrk@gmail.com
 
 ---
 
@@ -59,204 +58,95 @@ The application eliminates manual booking processes, prevents scheduling conflic
 
 ---
 
-## User Roles
+## Installation Guide
 
-#### Startup User
+#### 1. Clone Repository
 
-- Login
-- Dashboard
-- Book Laboratories
-- Book Equipment
-- Book Meeting Halls
-- View Booking Status
-- Cancel Bookings
-- View Notifications
-- Calendar View
+```bash
+git clone https://github.com/uthrahh/FacilityBooking
+cd FacilityBooking
+```
 
-#### Administrator
+#### 2. Create Virtual Environment
 
-- Login
-- Dashboard
-- Startup Management
-- Laboratory Management
-- Equipment Management
-- Hall Management
-- Review Booking Requests
-- Approve / Reject Bookings
-- View Booking History
-- Manage Notifications
+Windows
 
----
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
-## Major Features
+Linux / macOS
 
-#### Authentication
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-- Secure login system
-- Session-based authentication
-- Startup authentication
-- Administrator authentication
-- Protected routes using custom decorators
+#### 3. Install Dependencies
 
-#### Startup Management
+```bash
+pip install -r requirements.txt
+```
 
-Administrator can:
+#### 4. Configure PostgreSQL
 
-- Add startups
-- View startup list
-- Activate or deactivate startups
-- Manage startup records
+Create a PostgreSQL database.
 
-#### Laboratory Management
+Example:
 
-Administrator can:
+```
+Database : facility_booking
+User     : facility_admin
+Password : ********
+Host     : localhost
+Port     : 5432
+```
 
-- Add laboratories
-- Edit laboratory information
-- Enable or disable laboratories
-- View laboratory list
+Update the database configuration in:
 
-Each laboratory contains:
+```
+config/settings.py
+```
 
-- Lab ID
-- Name
-- Description
-- Availability Status
+#### 5. Run Migrations
 
-#### Equipment Management
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
-Administrator can:
+#### 6. Create Administrator
 
-- Add equipment
-- Assign equipment to laboratories
-- Configure hourly usage fee
-- Activate or deactivate equipment
+```bash
+python manage.py createsuperuser
+```
 
-Each equipment contains:
+Follow the prompts:
 
-- Equipment ID
-- Equipment Name
-- Associated Lab
-- Hourly Fee
-- Availability Status
+```
+Username:
+Email:
+Password:
+```
 
-#### Hall Management
+#### 7. Run Development Server
 
-Administrator can:
+```bash
+python manage.py runserver
+```
 
-- Add halls
-- Configure seating capacity
-- Update descriptions
-- Activate or deactivate halls
+Application:
 
-Each hall contains:
+```
+http://127.0.0.1:8000/
+```
 
-- Hall ID
-- Hall Name
-- Capacity
-- Description
-- Availability Status
+Admin Panel:
 
-#### Laboratory Booking Module
-
-Startup users can:
-
-- Select laboratory
-- Select booking date
-- Book multiple equipment
-- Specify individual time slots
-- View equipment availability
-- Calculate estimated booking fee
-- Submit booking request
-
-Features:
-
-- Equipment conflict validation
-- Time overlap validation
-- Multiple equipment booking
-- Automatic fee calculation
-- Booking history generation
-
-#### Hall Booking Module
-
-Startup users can:
-
-- Select hall
-- Choose booking time
-- Select AC
-- Select projector
-- Specify seating requirement
-- Request microphones
-- Request water bottles
-
-Features:
-
-- Hall availability validation
-- Time conflict prevention
-- Capacity validation
-- Booking history tracking
-
-#### Booking Workflow
-
-1. Startup submits booking request.
-2. Booking status is created as **NEW**.
-3. Administrator reviews request.
-4. Administrator approves or rejects request.
-5. Notification is generated.
-6. Booking history is stored.
-
-#### Notifications
-
-The system automatically generates notifications for:
-
-- Booking Approved
-- Booking Rejected
-- Booking Cancelled
-
-Unread notification count is displayed in the dashboard.
-
----
-
-## Dashboard Features
-
-#### Startup Dashboard
-
-Displays:
-
-- Total Lab Bookings
-- Total Hall Bookings
-- Pending Requests
-- Approved Requests
-
-#### Admin Dashboard
-
-Displays:
-
-- Total Startups
-- Total Laboratories
-- Total Equipment
-- Total Halls
-- Pending Lab Requests
-- Pending Hall Requests
-- Notification Count
-
-#### Calendar
-
-Integrated booking calendar displaying:
-
-- Approved laboratory bookings
-- Approved hall bookings
-- Time slots
-- Color-coded events
-
-#### Booking Status
-
-Possible booking statuses:
-
-- NEW
-- APPROVED
-- REJECTED
-- CANCELLED
+```
+http://127.0.0.1:8000/admin/
+```
 
 ---
 
@@ -477,95 +367,204 @@ FacilityBooking
 
 ---
 
-## Installation Guide
+## User Roles
 
-#### 1. Clone Repository
+#### Startup User
 
-```bash
-git clone https://github.com/uthrahh/FacilityBooking
-cd FacilityBooking
-```
+- Login
+- Dashboard
+- Book Laboratories
+- Book Equipment
+- Book Meeting Halls
+- View Booking Status
+- Cancel Bookings
+- View Notifications
+- Calendar View
 
-#### 2. Create Virtual Environment
+#### Administrator
 
-Windows
+- Login
+- Dashboard
+- Startup Management
+- Laboratory Management
+- Equipment Management
+- Hall Management
+- Review Booking Requests
+- Approve / Reject Bookings
+- View Booking History
+- Manage Notifications
 
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+---
 
-Linux / macOS
+## Major Features
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+#### Authentication
 
-#### 3. Install Dependencies
+- Secure login system
+- Session-based authentication
+- Startup authentication
+- Administrator authentication
+- Protected routes using custom decorators
 
-```bash
-pip install -r requirements.txt
-```
+#### Startup Management
 
-#### 4. Configure PostgreSQL
+Administrator can:
 
-Create a PostgreSQL database.
+- Add startups
+- View startup list
+- Activate or deactivate startups
+- Manage startup records
 
-Example:
+#### Laboratory Management
 
-```
-Database : facility_booking
-User     : facility_admin
-Password : ********
-Host     : localhost
-Port     : 5432
-```
+Administrator can:
 
-Update the database configuration in:
+- Add laboratories
+- Edit laboratory information
+- Enable or disable laboratories
+- View laboratory list
 
-```
-config/settings.py
-```
+Each laboratory contains:
 
-#### 5. Run Migrations
+- Lab ID
+- Name
+- Description
+- Availability Status
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+#### Equipment Management
 
-#### 6. Create Administrator
+Administrator can:
 
-```bash
-python manage.py createsuperuser
-```
+- Add equipment
+- Assign equipment to laboratories
+- Configure hourly usage fee
+- Activate or deactivate equipment
 
-Follow the prompts:
+Each equipment contains:
 
-```
-Username:
-Email:
-Password:
-```
+- Equipment ID
+- Equipment Name
+- Associated Lab
+- Hourly Fee
+- Availability Status
 
-#### 7. Run Development Server
+#### Hall Management
 
-```bash
-python manage.py runserver
-```
+Administrator can:
 
-Application:
+- Add halls
+- Configure seating capacity
+- Update descriptions
+- Activate or deactivate halls
 
-```
-http://127.0.0.1:8000/
-```
+Each hall contains:
 
-Admin Panel:
+- Hall ID
+- Hall Name
+- Capacity
+- Description
+- Availability Status
 
-```
-http://127.0.0.1:8000/admin/
-```
+#### Laboratory Booking Module
+
+Startup users can:
+
+- Select laboratory
+- Select booking date
+- Book multiple equipment
+- Specify individual time slots
+- View equipment availability
+- Calculate estimated booking fee
+- Submit booking request
+
+Features:
+
+- Equipment conflict validation
+- Time overlap validation
+- Multiple equipment booking
+- Automatic fee calculation
+- Booking history generation
+
+#### Hall Booking Module
+
+Startup users can:
+
+- Select hall
+- Choose booking time
+- Select AC
+- Select projector
+- Specify seating requirement
+- Request microphones
+- Request water bottles
+
+Features:
+
+- Hall availability validation
+- Time conflict prevention
+- Capacity validation
+- Booking history tracking
+
+#### Booking Workflow
+
+1. Startup submits booking request.
+2. Booking status is created as **NEW**.
+3. Administrator reviews request.
+4. Administrator approves or rejects request.
+5. Notification is generated.
+6. Booking history is stored.
+
+#### Notifications
+
+The system automatically generates notifications for:
+
+- Booking Approved
+- Booking Rejected
+- Booking Cancelled
+
+Unread notification count is displayed in the dashboard.
+
+---
+
+## Dashboard Features
+
+#### Startup Dashboard
+
+Displays:
+
+- Total Lab Bookings
+- Total Hall Bookings
+- Pending Requests
+- Approved Requests
+
+#### Admin Dashboard
+
+Displays:
+
+- Total Startups
+- Total Laboratories
+- Total Equipment
+- Total Halls
+- Pending Lab Requests
+- Pending Hall Requests
+- Notification Count
+
+#### Calendar
+
+Integrated booking calendar displaying:
+
+- Approved laboratory bookings
+- Approved hall bookings
+- Time slots
+- Color-coded events
+
+#### Booking Status
+
+Possible booking statuses:
+
+- NEW
+- APPROVED
+- REJECTED
+- CANCELLED
 
 ---
 
